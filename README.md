@@ -1,6 +1,8 @@
 # Agile Maturity Assessment
 
-A lightweight web application for tracking Agile maturity across disciplines, questions, and dated assessment snapshots.
+> The `Agile Maturity Assessment App` is up and running and can be accessed at https://aistudio.google.com/apps/75c64662-c4a3-4af1-9dfc-f9a23f8e8aea?source=start&showAssistant=true&showPreview=true
+
+`Agile Maturity Assessment App` is a lightweight web application for tracking Agile maturity across disciplines, questions, and dated assessment snapshots.
 
 This repository contains a single-page React dashboard backed by a minimal Express server that persists assessment data to a local `data.json` file. It is suitable for internal assessments, lightweight workshops, and maturity reviews where teams want a simple way to score current state, compare progress over time, and export results for reporting.
 
