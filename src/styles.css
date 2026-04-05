@@ -746,8 +746,9 @@ canvas {
 .modal {
   width: min(760px, 100%);
   max-height: min(88vh, 980px);
-  display: grid;
-  overflow: hidden;
+  display: flex;              /* change from grid → flex */
+  flex-direction: column;     /* header + body vertical layout */
+  overflow: hidden;           /* keep this */
 }
 
 .modal__header {
@@ -759,8 +760,10 @@ canvas {
 }
 
 .modal__body {
+  flex: 1;                    /* take remaining height */
+  min-height: 0;              /* critical for scroll to work in flex */
+  overflow-y: auto;           /* vertical scroll */
   padding: 1.25rem;
-  overflow: auto;
 }
 
 @media (max-width: 1100px) {
