@@ -3,11 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <title>Agile Maturity Assessment</title>
+    <meta
+      name="description"
+      content="Static Agile Maturity Assessment dashboard with snapshots, exports, recovery, and local browser persistence."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf@3.0.1/dist/jspdf.umd.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/jspdf-autotable@5.0.2/dist/jspdf.plugin.autotable.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/pptxgenjs@4.0.1/dist/pptxgen.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script defer src="./src/core/namespace.js"></script>
+    <script defer src="./src/constants/project-review-question-bank.js"></script>
+    <script defer src="./src/constants/default-data.js"></script>
+    <script defer src="./src/models/assessment-schema.js"></script>
+    <script defer src="./src/utils/date-utils.js"></script>
+    <script defer src="./src/utils/id-utils.js"></script>
+    <script defer src="./src/utils/download-utils.js"></script>
+    <script defer src="./src/utils/dom-utils.js"></script>
+    <script defer src="./src/utils/score-utils.js"></script>
+    <script defer src="./src/state/store.js"></script>
+    <script defer src="./src/services/persistence-service.js"></script>
+    <script defer src="./src/services/chart-service.js"></script>
+    <script defer src="./src/services/export-service.js"></script>
+    <script defer src="./src/ui/view-model.js"></script>
+    <script defer src="./src/ui/renderer.js"></script>
+    <script defer src="./src/controllers/app-controller.js"></script>
+    <script defer src="./src/app.js"></script>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="app"></div>
   </body>
 </html>
-
