@@ -27,16 +27,55 @@
       });
     }
 
+    function cleanQuestionTextSegment(value) {
+      return String(value || "")
+        .replace(/\r\n?/g, "\n")
+        .split("\n")
+        .map(function (line) {
+          return line.trim();
+        })
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+    }
+
+    function getQuestionTextSegments(questionText) {
+      var segments = String(questionText || "")
+        .replace(/\r\n?/g, "\n")
+        .split(/\n\s*\n+/)
+        .map(cleanQuestionTextSegment)
+        .filter(Boolean);
+
+      return segments.length ? segments : ["Imported question"];
+    }
+
+    function escapeQuestionTextSegment(value) {
+      return cleanQuestionTextSegment(value);
+    }
+
+    function getExportPrincipleLabel(principle) {
+      var normalized = String(principle || "").trim();
+      return normalized.replace(/^[A-Z]\d{2}\s*-\s*/, "") || normalized || "General Principle";
+    }
+
+    function formatQuestionTextLine(question, disciplineName) {
+      return [
+        disciplineName || "Unknown",
+        getExportPrincipleLabel(question.principle),
+        getQuestionTextSegments(question.question)
+          .map(function (segment) {
+            return escapeQuestionTextSegment(segment);
+          })
+          .join(","),
+      ].join(" | ");
+    }
+
     function exportQuestionsText(data) {
       var lines = data.questions.map(function (question) {
         var discipline = data.disciplines.find(function (item) {
           return item.id === question.disciplineId;
         });
-        return [
-          discipline ? discipline.name : "Unknown",
-          question.principle,
-          question.question,
-        ].join(" | ");
+        return formatQuestionTextLine(question, discipline ? discipline.name : "Unknown");
       });
 
       app.utils.download.downloadText(

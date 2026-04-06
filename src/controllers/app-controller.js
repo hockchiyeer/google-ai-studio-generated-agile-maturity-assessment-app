@@ -156,56 +156,346 @@
       });
     }
 
-    function parseImportLines(rawText, defaultDisciplineId, disciplines, activeSnapshotId) {
-      return String(rawText || "")
+    function normalizeImportText(value) {
+      return String(value || "").replace(/\r\n?/g, "\n");
+    }
+
+    function parseSeparatedSegments(value, delimiter) {
+      var text = String(value || "");
+      var segments = [];
+      var current = "";
+      var inQuotes = false;
+      var atSegmentStart = true;
+      var justClosedQuote = false;
+
+      for (var index = 0; index < text.length; index += 1) {
+        var character = text.charAt(index);
+        var nextCharacter = text.charAt(index + 1);
+
+        if (character === '"') {
+          if (!inQuotes && atSegmentStart) {
+            inQuotes = true;
+            justClosedQuote = false;
+          } else if (inQuotes && nextCharacter === '"') {
+            current += '"';
+            index += 1;
+            atSegmentStart = false;
+            justClosedQuote = false;
+          } else if (
+            inQuotes &&
+            (!nextCharacter || nextCharacter === delimiter || /\s/.test(nextCharacter))
+          ) {
+            inQuotes = false;
+            justClosedQuote = true;
+          } else {
+            current += character;
+            atSegmentStart = false;
+            justClosedQuote = false;
+          }
+        } else if (character === delimiter && !inQuotes) {
+          segments.push(current.trim());
+          current = "";
+          atSegmentStart = true;
+          justClosedQuote = false;
+        } else {
+          if (!(justClosedQuote && /\s/.test(character))) {
+            current += character;
+            if (!/\s/.test(character)) {
+              atSegmentStart = false;
+            }
+          }
+          if (!/\s/.test(character)) {
+            justClosedQuote = false;
+          }
+        }
+      }
+
+      segments.push(current.trim());
+      return segments;
+    }
+
+    function isStructuredImportLine(line, disciplines) {
+      if (line.indexOf("|") < 0) {
+        return false;
+      }
+
+      var firstSection = parseSeparatedSegments(line, "|")[0];
+      if (!firstSection) {
+        return false;
+      }
+
+      firstSection = firstSection.toLowerCase();
+      return disciplines.some(function (discipline) {
+        return discipline.name.toLowerCase() === firstSection;
+      });
+    }
+
+    function splitImportRecords(rawText, disciplines) {
+      var lines = normalizeImportText(rawText).split("\n");
+      var records = [];
+      var currentRecord = "";
+      var currentRecordStructured = false;
+
+      lines.forEach(function (rawLine) {
+        var line = rawLine.trim();
+        var lineStructured = line ? isStructuredImportLine(line, disciplines) : false;
+
+        if (!line) {
+          if (currentRecord && currentRecordStructured) {
+            currentRecord += "\n";
+          }
+          return;
+        }
+
+        if (!currentRecord) {
+          currentRecord = line;
+          currentRecordStructured = lineStructured;
+          return;
+        }
+
+        if (lineStructured) {
+          records.push(currentRecord);
+          currentRecord = line;
+          currentRecordStructured = true;
+          return;
+        }
+
+        if (currentRecordStructured) {
+          currentRecord += "\n" + line;
+          return;
+        }
+
+        records.push(currentRecord);
+        currentRecord = line;
+        currentRecordStructured = false;
+      });
+
+      if (currentRecord) {
+        records.push(currentRecord);
+      }
+
+      return records;
+    }
+
+    function cleanImportedSegment(value) {
+      return String(value || "")
+        .replace(/\r\n?/g, "\n")
+        .replace(/""/g, '"')
         .split("\n")
         .map(function (line) {
           return line.trim();
         })
         .filter(Boolean)
-        .map(function (line, index) {
-          var disciplineId = defaultDisciplineId;
-          var principle = "General Principle";
-          var questionText = line;
+        .join(" ")
+        .trim();
+    }
 
-          if (line.indexOf("|") >= 0) {
-            var parts = line.split("|").map(function (part) {
-              return part.trim();
-            });
+    function hasDelimitedQuotedSegment(value) {
+      return /(^|,)\s*"/.test(String(value || ""));
+    }
 
-            if (parts.length >= 3) {
-              var foundDiscipline = disciplines.find(function (discipline) {
-                return discipline.name.toLowerCase() === parts[0].toLowerCase();
-              });
-              if (foundDiscipline) {
-                disciplineId = foundDiscipline.id;
-              }
-              principle = parts[1] || principle;
-              questionText = parts.slice(2).join(" | ");
-            } else if (parts.length === 2) {
-              var matchedDiscipline = disciplines.find(function (discipline) {
-                return discipline.name.toLowerCase() === parts[0].toLowerCase();
-              });
-              if (matchedDiscipline) {
-                disciplineId = matchedDiscipline.id;
-                principle = matchedDiscipline.name;
-              }
-              questionText = parts[1];
-            }
+    function parseDelimitedSegments(value) {
+      return parseSeparatedSegments(value, ",");
+    }
+
+    function splitLooseQuestionParts(value) {
+      var text = normalizeImportText(value).trim();
+      var segments = [];
+      var startIndex = 0;
+
+      for (var index = 0; index < text.length; index += 1) {
+        if (text.charAt(index) !== ",") {
+          continue;
+        }
+
+        var leftCharacter = text.charAt(index - 1);
+        var probeIndex = index + 1;
+
+        while (probeIndex < text.length) {
+          var probeCharacter = text.charAt(probeIndex);
+          if (probeCharacter === '"' || /\s/.test(probeCharacter)) {
+            probeIndex += 1;
+          } else {
+            break;
           }
+        }
 
-          return {
-            id: app.utils.ids.createId("q-bulk-" + index),
-            disciplineId: disciplineId,
-            principle: principle,
-            question: questionText,
-            scores: (function () {
-              var scores = {};
-              scores[activeSnapshotId] = 2;
-              return scores;
-            })(),
-            targetScore: 4,
-          };
+        if (
+          leftCharacter === '"' ||
+          text.charAt(index + 1) === '"' ||
+          ((leftCharacter === "." ||
+            leftCharacter === "!" ||
+            leftCharacter === "?" ||
+            leftCharacter === ")") &&
+            /[A-Z0-9]/.test(text.charAt(probeIndex) || ""))
+        ) {
+          segments.push(text.slice(startIndex, index));
+          startIndex = index + 1;
+        }
+      }
+
+      if (!segments.length) {
+        return [cleanImportedSegment(text)];
+      }
+
+      segments.push(text.slice(startIndex));
+      return segments
+        .map(cleanImportedSegment)
+        .filter(function (part) {
+          return part || part === "0";
+        });
+    }
+
+    function extractImportBodyParts(questionText) {
+      var normalizedQuestion = normalizeImportText(questionText).trim();
+      var metadataStart = -1;
+      var bodyParts = [];
+      var metadataParts = [];
+
+      if (!normalizedQuestion) {
+        return {
+          bodyParts: [],
+          metadataParts: [],
+        };
+      }
+
+      if (normalizedQuestion.indexOf("\n") >= 0) {
+        bodyParts = normalizedQuestion
+          .split(/\n\s*\n+/)
+          .map(cleanImportedSegment)
+          .filter(Boolean);
+      } else {
+        bodyParts = [cleanImportedSegment(normalizedQuestion)];
+      }
+
+      if (!bodyParts.length && hasDelimitedQuotedSegment(normalizedQuestion)) {
+        bodyParts = parseDelimitedSegments(normalizedQuestion)
+          .map(cleanImportedSegment)
+          .filter(function (part) {
+            return part || part === "0";
+          });
+      }
+
+      if (bodyParts.length === 1 && hasDelimitedQuotedSegment(normalizedQuestion)) {
+        bodyParts = parseDelimitedSegments(normalizedQuestion)
+          .map(cleanImportedSegment)
+          .filter(function (part) {
+            return part || part === "0";
+          });
+      }
+
+      if (bodyParts.length === 1 && normalizedQuestion.indexOf(",") >= 0) {
+        bodyParts = splitLooseQuestionParts(normalizedQuestion);
+      }
+
+      if (bodyParts.length > 1) {
+        var lastBodyPart = bodyParts[bodyParts.length - 1];
+        if (/^[0-5Xx,\s]*$/.test(lastBodyPart) && lastBodyPart.indexOf(",") >= 0) {
+          bodyParts = bodyParts.slice(0, -1).concat(
+            parseDelimitedSegments(lastBodyPart)
+              .map(cleanImportedSegment)
+              .filter(function (part) {
+                return part || part === "0";
+              })
+          );
+        }
+      }
+
+      if (bodyParts.length >= 3) {
+        for (var index = 2; index < bodyParts.length; index += 1) {
+          var tail = bodyParts.slice(index);
+          var hasMetadataValue = false;
+          var isMetadataTail = tail.every(function (part) {
+            if (!part) {
+              return true;
+            }
+
+            hasMetadataValue = true;
+            return /^[0-5]$/.test(part) || /^[Xx]$/.test(part);
+          });
+
+          if (isMetadataTail && hasMetadataValue) {
+            metadataStart = index;
+            break;
+          }
+        }
+      }
+
+      if (metadataStart >= 0) {
+        metadataParts = bodyParts.slice(metadataStart);
+        bodyParts = bodyParts.slice(0, metadataStart);
+      }
+
+      return {
+        bodyParts: bodyParts.length ? bodyParts : [cleanImportedSegment(normalizedQuestion)],
+        metadataParts: metadataParts,
+      };
+    }
+
+    function parseImportLine(line, defaultDisciplineId, disciplines, activeSnapshotId, index) {
+      var disciplineId = defaultDisciplineId;
+      var principle = "General Principle";
+      var questionText = line;
+      var scoreValue = 2;
+      var targetScore = 4;
+      var structuredParts = parseSeparatedSegments(line, "|");
+
+      if (structuredParts.length >= 3) {
+        var disciplineName = structuredParts[0];
+        var matchedDiscipline = disciplines.find(function (discipline) {
+          return discipline.name.toLowerCase() === disciplineName.toLowerCase();
+        });
+        if (matchedDiscipline) {
+          disciplineId = matchedDiscipline.id;
+        }
+
+        principle = structuredParts[1] || principle;
+
+        var extractedParts = extractImportBodyParts(structuredParts.slice(2).join(" | "));
+        questionText = extractedParts.bodyParts.join("\n\n").trim() || questionText;
+
+        if (/^[0-5]$/.test(extractedParts.metadataParts[0] || "")) {
+          scoreValue = Number(extractedParts.metadataParts[0]);
+        }
+
+        if (/^[0-5]$/.test(extractedParts.metadataParts[1] || "")) {
+          targetScore = Number(extractedParts.metadataParts[1]);
+        }
+      } else if (structuredParts.length === 2) {
+        var partialDisciplineName = structuredParts[0];
+        var foundDiscipline = disciplines.find(function (discipline) {
+          return discipline.name.toLowerCase() === partialDisciplineName.toLowerCase();
+        });
+        if (foundDiscipline) {
+          disciplineId = foundDiscipline.id;
+          principle = foundDiscipline.name;
+          questionText = structuredParts[1];
+        }
+      } else {
+        questionText = cleanImportedSegment(line);
+      }
+
+      return {
+        id: app.utils.ids.createId("q-bulk-" + index),
+        disciplineId: disciplineId,
+        principle: principle,
+        question: questionText,
+        scores: (function () {
+          var scores = {};
+          scores[activeSnapshotId] = scoreValue;
+          return scores;
+        })(),
+        targetScore: targetScore,
+      };
+    }
+
+    function parseImportLines(rawText, defaultDisciplineId, disciplines, activeSnapshotId) {
+      return splitImportRecords(rawText, disciplines)
+        .map(function (line, index) {
+          return parseImportLine(line, defaultDisciplineId, disciplines, activeSnapshotId, index);
+        })
+        .filter(function (question) {
+          return question.question;
         });
     }
 

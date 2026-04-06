@@ -321,12 +321,12 @@
         : '<button type="button" class="button button-small button-danger-soft" data-action="prompt-clear-all">Clear All Questions</button>') +
       "</div></div>" +
       '<div class="stack gap-lg">' +
-      '<div class="panel-row"><div><h4 class="panel-title">Bulk Import / Export</h4><p class="panel-copy">Paste one question per line. You can also prefix with discipline and principle using pipes.</p></div><button type="button" class="button button-small button-ghost" data-action="export-questions">Export Questions</button></div>' +
+      '<div class="panel-row"><div><h4 class="panel-title">Bulk Import / Export</h4><p class="panel-copy">Paste one question per line, or paste a previously exported question text file directly. Structured entries can include discipline and principle using pipes.</p></div><button type="button" class="button button-small button-ghost" data-action="export-questions">Export Questions</button></div>' +
       '<form class="stack gap-md" data-action="bulk-import-questions">' +
       '<label class="field"><span class="field-label">Default Discipline</span><select class="input" name="defaultDisciplineId" required>' +
       renderOptions(data.disciplines, data.disciplines[0] ? data.disciplines[0].id : "") +
       "</select></label>" +
-      '<label class="field"><span class="field-label">Questions</span><textarea class="input textarea textarea-lg" name="importText" placeholder="Agility | Daily Standups | How effectively does the team implement daily standups?&#10;Architecture | System is modular | Is the system designed with modularity in mind?" required></textarea></label>' +
+      '<label class="field"><span class="field-label">Questions</span><textarea class="input textarea textarea-lg" name="importText" placeholder="Agility | Customer Satisfaction | Our highest priority is to satisfy the customer through early and continuous delivery of valuable software,The needs of our customer is at the center of our work.&#10;Architecture | System is modular | Is the system designed with modularity in mind?" required></textarea></label>' +
       '<button type="submit" class="button button-primary button-block">Import Questions</button>' +
       "</form></div></div>"
     );
