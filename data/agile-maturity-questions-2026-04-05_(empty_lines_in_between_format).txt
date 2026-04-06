@@ -33,7 +33,7 @@ Agility | A11 - Self-organizing Teams | The best architectures, requirements, an
 After all, the teams are doing the relevant work in a project. When they accept the job and get self organized, there is little that can stop them.
 Agility | A12 - Retrospective | At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly.
 
-Enable and encourage Learning. Throughout the entire project, create regular checkpoints to evaluate and challenge the effectiveness of your process. Any agreed improvements are swiftly implemented and followed-up upon. (development methodology, communication, roles) strive to improve opportunities. Conduct a lessons learned/Retrospective session periodically. Find out the weaknesses followed by defining action points. Reflect your strengths and expand them further. The team should establish a routine to regularly reflect and improve their methods and results. They actively request feedback from their respective stakeholders, possibly in various groups (team-level, among product owners, all-hands/across teams, project-vs.-customers etc.). The results of these Retrospectives should be logged (in a light-weight manner) and followed-up upon in the next iteration/sprint/phase. Establish a feedback culture i.e. make taking and giving feedback normal and people know how to do both. Without continous improvement it is likely to repeat the same mistake again. Enable the team to continuously improve and to become more efficient in their daily work.
+Enable and encourage Learning. Throughout the entire project, create regular checkpoints to evaluate and challenge the effectiveness of your process. Any agreed improvements are swiftly implemented and followed-up upon. (development methodology, communication, roles) strive to improve opportunities. Conduct a lessons learned/Retrospective session periodically. Find out the weaknesses followed by defining action points. Reflect your strengths and expand them further. The team should establish a routine to regularly reflect and improve their methods and results. They actively request feedback from their respective stakeholders, possibly in various groups (team-level, among product owners, all-hands/across teams, project-vs.-customers etc.). The results of these Retrospectives should be logged (in a light-weight manner) and followed-up upon in the next iteration/sprint/phase. Establish a feedback culture i.e. make taking and giving feedback normal and people know how to do both. Without continuous improvement it is likely to repeat the same mistake again. Enable the team to continuously improve and to become more efficient in their daily work.
 Overall Process | B01 - Transparent Planning | Have a holistic project plan and make it come to life, think ahead and update it regularly. The plan should be detailed for the near future and coarse grained for the more distant future. Know your critical path. Communicate your plan regularly to everybody who needs to know, adapted to the respective audience. Make sure plans on all "levels" (program-wide, within teams, Iteration planning etc.) are in sync and reflect what is actually to be done. Ideally, plans on the individual and team levels can be easily derived from a larger, higher-level plan.
 
 Set up project delivery strategy (communication, working principles, controlling etc.) holistically. All parties must collaborate in all stages of the project/product lifecycle - albeit with varying contribution levels. We must think beyond the creation of pure "software" and consider other aspects: hardware/infrastructure, adaption of business/organizational processes or structures, training etc..
@@ -59,7 +59,7 @@ Assuming that people "remember" agreements, or "interpret" the workings of a pie
 Overall Process | B07 - Quality Gates | Follow defined Quality Gates and include them deeply into the project.
 
 Without complying defined Quality Gates it is possible that issues will be detected too late. Additionally the overall goal is endangered.
-Overall Process | B08 - Bugfixing Strategy | Define a strategy for handling bugs during release preparation and in production. This should include the versioning scheme for bugfixes (buildmanagement). Test your strategy with dummy bugs before going into production.
+Overall Process | B08 - Bugfixing Strategy | Define a strategy for handling bugs during release preparation and in production. This should include the versioning scheme for bugfixes (Build Management). Test your strategy with dummy bugs before going into production.
 
 Bugfixing processes, builds and deployments need to be in place before first production deployment to allow fast reaction when the first bugs are encountered.
 Requirements | C01 - Know your users | In order to build the right solution a thorough knowledge of the users, their roles and their capabilities is essential.
@@ -146,7 +146,7 @@ Test | F03 - Test status | Enable the project to evaluate the quality at anytime
 Besides reporting, it is important to have a traceability concerning test cases, defects,bugs, requirements, etc. Decisions without having the necessary information are difficult and more likely not the best calls.
 Test | F04 - Appropriate level of Test automation | To get faster results and increase efficiency we use automated test cases where technically and economically possible.
 
-Agile Integration: We create and execute automated test cases within the same sprint cycle wherever possible to achieve highest efficency.
+Agile Integration: We create and execute automated test cases within the same sprint cycle wherever possible to achieve highest efficiency.
 
 Especially for agile projects, automated test cases are crucial for receiving the results on time. Without having the right set of automated test cases it is impossible to get an acceptable coverage.
 
@@ -156,30 +156,30 @@ Test | F05 - Stable test environment and test data | We are using a stable and u
 Unstable test environments and data could increase the effort and lead to wrong results. For functional test and technical tests, test data management is an important prerequisite to ensure reasonable test results.
 Test | F06 - Independent test cases | Test cases have to be created independently from each other.
 
-Tests that are atomic, specific, precise and independent could provide fast feedback on the test result of different features/system functionalities for quick corrective action without the need to isolate the rootcause via human intervention. If test cases are interdependent and tighly coupled, a defect related to the test case in the earlier sequence could block the execution of dependent test cases in later sequence.  Like wise, early test steps that are failed in a long test case could also block the execution of subsequent steps, hence masking the defects could have uncovered by short and atomic tests.
+Tests that are atomic, specific, precise and independent could provide fast feedback on the test result of different features/system functionalities for quick corrective action without the need to isolate the rootcause via human intervention. If test cases are interdependent and tightly coupled, a defect related to the test case in the earlier sequence could block the execution of dependent test cases in later sequence.  Like wise, early test steps that are failed in a long test case could also block the execution of subsequent steps, hence masking the defects could have uncovered by short and atomic tests.
 Test | F07 - Design for test | Provide necessary interfaces for executing tests. Close collaboration with System architects and developers in early stages is mandatory and help to accomplish essential requirements.
 
-Regarding automatization, we choose an automated test approach with highest maintainability. (e.g Keyword-Driven instead of Script based)
+Regarding automation, we choose an automated test approach with highest maintainability. (e.g Keyword-Driven instead of Script based)
 
 Without having the required testability it´s impossible to execute sufficient tests. This leads either to untested software or to substantial delays.
 
 Not only the technical test team should be able to maintain automated tests. By using the right approach members of the functional test can easily maintain the test cases themselves.
-Test | F08 - Reliability and Reproducability | Test cases have to be designed in a way they could be reproduced under consistent conditions and deliver identical results.
+Test | F08 - Reliability and Reproducibility | Test cases have to be designed in a way they could be reproduced under consistent conditions and deliver identical results.
 
 Test results which cannot be reproduced are useless and will lead to time consuming discussions.
 Operations and Support | G01 - Least authorisation | IT staff should have only the needed rights to do their job and not administrator rights in general. The same applies for applications, they should run with only the necessary rights needed to fulfill their tasks.
 
-This principle is important in order to reduce risk in operation of human errors and imcompliance. This is to ensure that we have stable and performant IT services for our customers.
+This principle is important in order to reduce risk in operation of human errors and noncompliance. This is to ensure that we have stable and performant IT services for our customers.
 Operations and Support | G02 - Design for devops | Our company's developed software must be designed for automated deployment and configuration. It´s also important that software can be updated without or only with short downtimes.
 
 Time to market is important, therefore any manual step to release new features should be automated. Customers don´t like service disruptions, therefore we must prevent outages during deployments.
 Operations and Support | G03 - Logging and tracing | Good logging and tracing capabilities must be in place.
 
-Support team needs good analysis options to solve incidents quickly to restore the ITservice as quickly as possible.
+Support team needs good analysis options to solve incidents quickly to restore the IT service as quickly as possible.
 Operations and Support | G04 - Design for business continuity | Business continuity must be planned in the design phase. Discuss availability demand with business
 
 In order to supply robust and stable IT services we need to discuss disaster scenarios and mitigations with the business
-Buildmanagement | H01 - CI Builds | Every commit should be tested as early, thorough and fast as possible. This should be staged by priorities. (Compilability, unit tests, integration tests, code quality)
+Build Management | H01 - CI Builds | Every commit should be tested as early, thorough and fast as possible. This should be staged by priorities. (Compilability, unit tests, integration tests, code quality)
 
 A CI build job checks code for buildability and derives immediate feedback to the team about the outcome of the build and quality check.
 
@@ -189,21 +189,21 @@ This principle covers two aspects:
 
 Ideally, gated check-ins are used (i.e. source code cannot be checked in until builds succeed).
 The later problems are detected, the harder the problems to be fixed. Using an early CI build ensures a minimal quality standard for centralized code repository.
-Buildmanagement | H02 - Pre Commit Check | Commits should not be allowed into master branch without passing the defined quality gates. These quality gates must be continuosly adjusted.
+Build Management | H02 - Pre Commit Check | Commits should not be allowed into master branch without passing the defined quality gates. These quality gates must be continuously adjusted.
 
 If the master is protected from erroneous commits, it always contains releaseable content. If non-releasable content is allowed into master, releases can not be created on demand.
-Buildmanagement | H03 - Extreme Feedback | Every team member must be notified as early and as precise as possible about build relevant issues (failing builds/deployments), this should be done with a different mechanism than email.
+Build Management | H03 - Extreme Feedback | Every team member must be notified as early and as precise as possible about build relevant issues (failing builds/deployments), this should be done with a different mechanism than email.
 
 The earlier teams members are notified of a problem, the earlier they can act to resolve it
-Buildmanagement | H04 - Repeatable Build | Builds must be repeatable, i.e. the same source code must result in exactly the same artifacts.
+Build Management | H04 - Repeatable Build | Builds must be repeatable, i.e. the same source code must result in exactly the same artifacts.
 
 If builds are not repeatable, production bugs might not be able to be reproduced on other environments.
-Buildmanagement | H05 - Environment Independent Artifact | Artifacts must be independent of the target environment. The same artifact must be deployable to all environments.
+Build Management | H05 - Environment Independent Artifact | Artifacts must be independent of the target environment. The same artifact must be deployable to all environments.
 
 If builds are environment specific, a new build would have to be started for every stage of a deployment pipeline, introducing additional risks.
-Buildmanagement | H06 - Artifact Repository/Dependency Management | Build results must be stored in a separate repository. Dependent projects and deployments must take the artifacts solely from that repository. This must be done using an appropriate dependency management mechanism of the build system.
+Build Management | H06 - Artifact Repository/Dependency Management | Build results must be stored in a separate repository. Dependent projects and deployments must take the artifacts solely from that repository. This must be done using an appropriate dependency management mechanism of the build system.
 
-Coupling two projects via source code control introduces tracability problems, especially considering tagging and branching. Also it unecessarily increases the buildtime.
-Buildmanagement | H07 - Versioning Scheme | Implement a version scheme that allows to easily differentiate between stable and unstable versions.
+Coupling two projects via source code control introduces traceability problems, especially considering tagging and branching. Also it unnecessarily increases the build time.
+Build Management | H07 - Versioning Scheme | Implement a version scheme that allows to easily differentiate between stable and unstable versions.
 
 This allows quick turnaround times for developers using unstable version on actual environments, while minimizing the risk of accidental deployment of those unstable versions to higher environments (including production).
