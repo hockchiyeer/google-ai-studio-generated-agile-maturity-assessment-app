@@ -74,7 +74,7 @@ A clear definition of the scope is a must have. Otherwise, you will end up desig
 Requirements | C04 - Trust in our estimates | We trust in our estimates; looking backward our estimates were neither too high nor too low. If possible estimations come from the whole team.
 
 Being able to estimate (be it in persondays or story points) is essential in order to steer the project.
-Requirements | C05 - Traceability | Projects are devided into releases, features, stories and so on. It's well documented what artefact is in which state and the overall project scope can be derived by those artefacts. A tool (like Microsoft TFS, Azure DevOps, Jira and etc) covers the traceability and people are aware of how artefacts are connected.
+Requirements | C05 - Traceability | Projects are divided into releases, features, stories and so on. It's well documented what artefact is in which state and the overall project scope can be derived by those artefacts. A tool (like Microsoft TFS, Azure DevOps, Jira and etc) covers the traceability and people are aware of how artefacts are connected.
 
 We do nothing in a project without a reason - it must be connected to the project in a way.
 Requirements | C06 - Functional overall picture | Have a big picture that gives everybody an overview of what has to be achieved or is already there.

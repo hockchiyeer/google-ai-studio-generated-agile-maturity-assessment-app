@@ -42,8 +42,8 @@
       },
       {
         "id": "H",
-        "name": "Buildmanagement",
-        "sourceName": "H-Buildmanagement"
+        "name": "Build Management",
+        "sourceName": "H-Build Management"
       }
     ],
     "questions": [
@@ -151,7 +151,7 @@
         "A",
         "A12",
         "Retrospective",
-        "At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly.\n\nEnable and encourage Learning. Throughout the entire project, create regular checkpoints to evaluate and challenge the effectiveness of your process. Any agreed improvements are swiftly implemented and followed-up upon. (development methodology, communication, roles) strive to improve opportunities. Conduct a lessons learned/Retrospective session periodically. Find out the weaknesses followed by defining action points. Reflect your strengths and expand them further. The team should establish a routine to regularly reflect and improve their methods and results. They actively request feedback from their respective stakeholders, possibly in various groups (team-level, among product owners, all-hands/across teams, project-vs.-customers etc.). The results of these Retrospectives should be logged (in a light-weight manner) and followed-up upon in the next iteration/sprint/phase. Establish a feedback culture i.e. make taking and giving feedback normal and people know how to do both. Without continous improvement it is likely to repeat the same mistake again. Enable the team to continuously improve and to become more efficient in their daily work.",
+        "At regular intervals, the team reflects on how to become more effective, then tunes and adjusts its behavior accordingly.\n\nEnable and encourage Learning. Throughout the entire project, create regular checkpoints to evaluate and challenge the effectiveness of your process. Any agreed improvements are swiftly implemented and followed-up upon. (development methodology, communication, roles) strive to improve opportunities. Conduct a lessons learned/Retrospective session periodically. Find out the weaknesses followed by defining action points. Reflect your strengths and expand them further. The team should establish a routine to regularly reflect and improve their methods and results. They actively request feedback from their respective stakeholders, possibly in various groups (team-level, among product owners, all-hands/across teams, project-vs.-customers etc.). The results of these Retrospectives should be logged (in a light-weight manner) and followed-up upon in the next iteration/sprint/phase. Establish a feedback culture i.e. make taking and giving feedback normal and people know how to do both. Without continuous improvement it is likely to repeat the same mistake again. Enable the team to continuously improve and to become more efficient in their daily work.",
         2,
         4
       ],
@@ -223,7 +223,7 @@
         "B",
         "B08",
         "Bugfixing Strategy",
-        "Define a strategy for handling bugs during release preparation and in production. This should include the versioning scheme for bugfixes (buildmanagement). Test your strategy with dummy bugs before going into production.\n\nBugfixing processes, builds and deployments need to be in place before first production deployment to allow fast reaction when the first bugs are encountered.",
+        "Define a strategy for handling bugs during release preparation and in production. This should include the versioning scheme for bugfixes (Build Management). Test your strategy with dummy bugs before going into production.\n\nBugfixing processes, builds and deployments need to be in place before first production deployment to allow fast reaction when the first bugs are encountered.",
         2,
         4
       ],
@@ -268,7 +268,7 @@
         "C",
         "C05",
         "Traceability",
-        "Projects are devided into releases, features, stories and so on. It's well documented what artefact is in which state and the overall project scope can be derived by those artefacts. A tool (like Microsoft TFS, Azure DevOps, Jira and etc) covers the traceability and people are aware of how artefacts are connected.\n\nWe do nothing in a project without a reason - it must be connected to the project in a way.",
+        "Projects are divided into releases, features, stories and so on. It's well documented what artefact is in which state and the overall project scope can be derived by those artefacts. A tool (like Microsoft TFS, Azure DevOps, Jira and etc) covers the traceability and people are aware of how artefacts are connected.\n\nWe do nothing in a project without a reason - it must be connected to the project in a way.",
         2,
         4
       ],
@@ -448,7 +448,7 @@
         "F",
         "F04",
         "Appropriate level of Test automation",
-        "To get faster results and increase efficiency we use automated test cases where technically and economically possible.\n\nAgile Integration: We create and execute automated test cases within the same sprint cycle wherever possible to achieve highest efficency.\n\nEspecially for agile projects, automated test cases are crucial for receiving the results on time. Without having the right set of automated test cases it is impossible to get an acceptable coverage.\n\nTime offset leads to inefficient processes. In addition test cases can be used immediately (within the same sprint). A high coverage helps to get fast results and to evaluate the quality of a deliverable at the end of a sprint.",
+        "To get faster results and increase efficiency we use automated test cases where technically and economically possible.\n\nAgile Integration: We create and execute automated test cases within the same sprint cycle wherever possible to achieve highest efficiency.\n\nEspecially for agile projects, automated test cases are crucial for receiving the results on time. Without having the right set of automated test cases it is impossible to get an acceptable coverage.\n\nTime offset leads to inefficient processes. In addition test cases can be used immediately (within the same sprint). A high coverage helps to get fast results and to evaluate the quality of a deliverable at the end of a sprint.",
         2,
         4
       ],
@@ -466,7 +466,7 @@
         "F",
         "F06",
         "Independent test cases",
-        "Test cases have to be created independently from each other.\n\nTests that are atomic, specific, precise and independent could provide fast feedback on the test result of different features/system functionalities for quick corrective action without the need to isolate the rootcause via human intervention. If test cases are interdependent and tighly coupled, a defect related to the test case in the earlier sequence could block the execution of dependent test cases in later sequence.  Like wise, early test steps that are failed in a long test case could also block the execution of subsequent steps, hence masking the defects could have uncovered by short and atomic tests.",
+        "Test cases have to be created independently from each other.\n\nTests that are atomic, specific, precise and independent could provide fast feedback on the test result of different features/system functionalities for quick corrective action without the need to isolate the rootcause via human intervention. If test cases are interdependent and tightly coupled, a defect related to the test case in the earlier sequence could block the execution of dependent test cases in later sequence.  Like wise, early test steps that are failed in a long test case could also block the execution of subsequent steps, hence masking the defects could have uncovered by short and atomic tests.",
         2,
         4
       ],
@@ -475,7 +475,7 @@
         "F",
         "F07",
         "Design for test",
-        "Provide necessary interfaces for executing tests. Close collaboration with System architects and developers in early stages is mandatory and help to accomplish essential requirements.\n\nRegarding automatization, we choose an automated test approach with highest maintainability. (e.g Keyword-Driven instead of Script based)\n\nWithout having the required testability it´s impossible to execute sufficient tests. This leads either to untested software or to substantial delays.\n\nNot only the technical test team should be able to maintain automated tests. By using the right approach members of the functional test can easily maintain the test cases themselves.",
+        "Provide necessary interfaces for executing tests. Close collaboration with System architects and developers in early stages is mandatory and help to accomplish essential requirements.\n\nRegarding automation, we choose an automated test approach with highest maintainability. (e.g Keyword-Driven instead of Script based)\n\nWithout having the required testability it´s impossible to execute sufficient tests. This leads either to untested software or to substantial delays.\n\nNot only the technical test team should be able to maintain automated tests. By using the right approach members of the functional test can easily maintain the test cases themselves.",
         2,
         4
       ],
@@ -483,7 +483,7 @@
         "q-F08",
         "F",
         "F08",
-        "Reliability and Reproducability",
+        "Reliability and Reproducibility",
         "Test cases have to be designed in a way they could be reproduced under consistent conditions and deliver identical results.\n\nTest results which cannot be reproduced are useless and will lead to time consuming discussions.",
         2,
         4
@@ -493,7 +493,7 @@
         "G",
         "G01",
         "Least authorisation",
-        "IT staff should have only the needed rights to do their job and not administrator rights in general. The same applies for applications, they should run with only the necessary rights needed to fulfill their tasks.\n\nThis principle is important in order to reduce risk in operation of human errors and imcompliance. This is to ensure that we have stable and performant IT services for our customers.",
+        "IT staff should have only the needed rights to do their job and not administrator rights in general. The same applies for applications, they should run with only the necessary rights needed to fulfill their tasks.\n\nThis principle is important in order to reduce risk in operation of human errors and noncompliance. This is to ensure that we have stable and performant IT services for our customers.",
         2,
         4
       ],
@@ -511,7 +511,7 @@
         "G",
         "G03",
         "Logging and tracing",
-        "Good logging and tracing capabilities must be in place.\n\nSupport team needs good analysis options to solve incidents quickly to restore the ITservice as quickly as possible.",
+        "Good logging and tracing capabilities must be in place.\n\nSupport team needs good analysis options to solve incidents quickly to restore the IT service as quickly as possible.",
         2,
         4
       ],
@@ -538,7 +538,7 @@
         "H",
         "H02",
         "Pre Commit Check",
-        "Commits should not be allowed into master branch without passing the defined quality gates. These quality gates must be continuosly adjusted.\n\nIf the master is protected from erroneous commits, it always contains releaseable content. If non-releasable content is allowed into master, releases can not be created on demand.",
+        "Commits should not be allowed into master branch without passing the defined quality gates. These quality gates must be continuously adjusted.\n\nIf the master is protected from erroneous commits, it always contains releaseable content. If non-releasable content is allowed into master, releases can not be created on demand.",
         2,
         4
       ],
@@ -574,7 +574,7 @@
         "H",
         "H06",
         "Artifact Repository/Dependency Management",
-        "Build results must be stored in a separate repository. Dependent projects and deployments must take the artifacts solely from that repository. This must be done using an appropriate dependency management mechanism of the build system.\n\nCoupling two projects via source code control introduces tracability problems, especially considering tagging and branching. Also it unecessarily increases the buildtime.",
+        "Build results must be stored in a separate repository. Dependent projects and deployments must take the artifacts solely from that repository. This must be done using an appropriate dependency management mechanism of the build system.\n\nCoupling two projects via source code control introduces traceability problems, especially considering tagging and branching. Also it unnecessarily increases the buildtime.",
         2,
         4
       ],
