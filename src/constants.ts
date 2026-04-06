@@ -1,15 +1,10 @@
-import { AssessmentData, Snapshot } from "./types";
+import { AssessmentData, Question, Snapshot } from "./types";
+import {
+  DEFAULT_DISCIPLINES,
+  SEEDED_QUESTION_TEMPLATES,
+} from "./seededQuestionBank";
 
-export const DEFAULT_DISCIPLINES = [
-  { id: "A", name: "Agility" },
-  { id: "B", name: "Overall Process" },
-  { id: "C", name: "Requirements" },
-  { id: "D", name: "Architecture" },
-  { id: "E", name: "Implementation" },
-  { id: "F", name: "Test" },
-  { id: "G", name: "Operations" },
-  { id: "H", name: "Buildmanagement" },
-];
+export { DEFAULT_DISCIPLINES };
 
 const INITIAL_SNAPSHOT_ID = "initial-snapshot";
 const INITIAL_SNAPSHOT: Snapshot = {
@@ -18,30 +13,15 @@ const INITIAL_SNAPSHOT: Snapshot = {
   label: "Initial Assessment",
 };
 
-// Seeded questions - 60 questions across 8 disciplines
-// For brevity in this constant, we'll generate some generic ones but ensure they cover all disciplines
-const generateSeededQuestions = () => {
-  const questions = [];
-  const counts: Record<string, number> = {
-    A: 8, B: 8, C: 8, D: 7, E: 7, F: 8, G: 7, H: 7
-  };
-
-  let qId = 1;
-  for (const disc of DEFAULT_DISCIPLINES) {
-    const count = counts[disc.id] || 7;
-    for (let i = 1; i <= count; i++) {
-      questions.push({
-        id: `q-${qId++}`,
-        disciplineId: disc.id,
-        principle: `${disc.name} Principle ${i}`,
-        question: `How effectively does the team implement standard agile practices for ${disc.name.toLowerCase()}? This assessment evaluates the depth of adoption and consistency across the project lifecycle.`,
-        scores: { [INITIAL_SNAPSHOT_ID]: 2 },
-        targetScore: 4,
-      });
-    }
-  }
-  return questions;
-};
+const generateSeededQuestions = (): Question[] =>
+  SEEDED_QUESTION_TEMPLATES.map((template, index) => ({
+    id: `q-${index + 1}`,
+    disciplineId: template.disciplineId,
+    principle: template.principle,
+    question: template.question,
+    scores: { [INITIAL_SNAPSHOT_ID]: 2 },
+    targetScore: 4,
+  }));
 
 export const INITIAL_DATA: AssessmentData = {
   schemaVersion: "1.0.0",
@@ -54,7 +34,7 @@ export const INITIAL_DATA: AssessmentData = {
     id: "log-1",
     timestamp: new Date().toISOString(),
     action: "System",
-    details: "Application initialized with seeded data."
+    details: "Application initialized with the corrected seeded question bank."
   }],
   lastModified: new Date().toISOString(),
 };
