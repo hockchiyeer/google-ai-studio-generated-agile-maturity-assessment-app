@@ -49,6 +49,7 @@ import * as XLSX from 'xlsx';
 
 import { AssessmentData, Snapshot, Question, Discipline, AuditEntry } from './types';
 import { INITIAL_DATA } from './constants';
+import { formatQuestionTextRecord, parseQuestionTextRecords } from './questionTextParser';
 
 ChartJS.register(
   RadialLinearScale,
@@ -126,43 +127,69 @@ export default function App() {
   const [editingCell, setEditingCell] = useState<{ id: string, field: 'principle' | 'question' } | null>(null);
   const [editValue, setEditValue] = useState('');
   const [fileHandle, setFileHandle] = useState<FileSystemFileHandle | null>(null);
+  const [isInitialLoadReady, setIsInitialLoadReady] = useState(false);
   const radarChartRef = useRef<any>(null);
   const barChartRef = useRef<any>(null);
   const lineChartRef = useRef<any>(null);
+  const lastSavedPayload = useRef<string | null>(null);
 
   // Persistence: Fetch from server on load
   useEffect(() => {
+    let isActive = true;
+
     const fetchData = async () => {
       try {
         const response = await fetch('/api/data');
         if (response.ok) {
           const serverData = await response.json();
+          if (!isActive) return;
+          lastSavedPayload.current = JSON.stringify(serverData);
           setData(serverData);
         }
       } catch (err) {
         console.error("Failed to fetch data from server:", err);
+      } finally {
+        if (isActive) {
+          setIsInitialLoadReady(true);
+        }
       }
     };
+
     fetchData();
+
+    return () => {
+      isActive = false;
+    };
   }, []);
 
   // Persistence: Save to server on change
   useEffect(() => {
+    if (!isInitialLoadReady) {
+      return;
+    }
+
+    const serializedData = JSON.stringify(data);
+    if (serializedData === lastSavedPayload.current) {
+      return;
+    }
+
     const saveData = async () => {
       try {
         await fetch('/api/data', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          body: serializedData,
         });
+        lastSavedPayload.current = serializedData;
       } catch (err) {
         console.error("Failed to save data to server:", err);
       }
     };
+
     // Debounce save
     const timeout = setTimeout(saveData, 1000);
     return () => clearTimeout(timeout);
-  }, [data]);
+  }, [data, isInitialLoadReady]);
 
   // Persistence: Autosave if linked
   useEffect(() => {
@@ -503,10 +530,16 @@ export default function App() {
   };
 
   const handleExportQuestions = () => {
-    const text = data.questions.map(q => {
-      const disc = data.disciplines.find(d => d.id === q.disciplineId)?.name || 'Unknown';
-      return `${disc} | ${q.principle} | ${q.question}`;
-    }).join('\n');
+    const text = data.questions
+      .map((question) => {
+        const disciplineName = data.disciplines.find((discipline) => discipline.id === question.disciplineId)?.name || 'Unknown';
+        return formatQuestionTextRecord({
+          disciplineName,
+          principle: question.principle,
+          question: question.question,
+        });
+      })
+      .join('\n');
     
     const blob = new Blob([text], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -519,35 +552,33 @@ export default function App() {
   };
 
   const handleBulkImport = (rawText: string, defaultDisciplineId: string) => {
-    const lines = rawText.split('\n').filter(line => line.trim() !== '');
-    const newQuestions: Question[] = lines.map((line, index) => {
+    const importedRecords = parseQuestionTextRecords(rawText);
+    const importTimestamp = Date.now();
+
+    const newQuestions: Question[] = importedRecords.map((record, index) => {
       let disciplineId = defaultDisciplineId;
       let principle = "General Principle";
-      let question = line.trim();
+      const question = record.question;
 
-      // Support "Discipline Name | Principle | Question Text" or "Discipline Name | Question Text"
-      if (line.includes('|')) {
-        const parts = line.split('|').map(s => s.trim());
-        
-        if (parts.length >= 3) {
-          // Format: Discipline | Principle | Question
-          const foundDisc = data.disciplines.find(d => d.name.toLowerCase() === parts[0].toLowerCase());
-          if (foundDisc) disciplineId = foundDisc.id;
-          principle = parts[1];
-          question = parts[2];
-        } else if (parts.length === 2) {
-          // Format: Discipline | Question (Principle defaults to Discipline Name)
-          const foundDisc = data.disciplines.find(d => d.name.toLowerCase() === parts[0].toLowerCase());
-          if (foundDisc) {
-            disciplineId = foundDisc.id;
+      if (record.disciplineName) {
+        const foundDisc = data.disciplines.find(
+          d => d.name.toLowerCase() === record.disciplineName!.toLowerCase()
+        );
+
+        if (foundDisc) {
+          disciplineId = foundDisc.id;
+          if (!record.principle) {
             principle = foundDisc.name;
           }
-          question = parts[1];
         }
       }
 
+      if (record.principle) {
+        principle = record.principle;
+      }
+
       return {
-        id: `q-bulk-${Date.now()}-${index}`,
+        id: `q-bulk-${importTimestamp}-${index}`,
         disciplineId,
         principle,
         question,
@@ -1814,12 +1845,14 @@ function BulkActionsForm({ disciplines, onClear, onImport, onExport }: {
         {showConfirmClear ? (
           <div className="flex gap-2">
             <button 
+              type="button"
               onClick={() => { onClear(); setShowConfirmClear(false); }}
               className="flex-1 py-2 bg-red-600 text-white rounded-lg text-sm font-bold hover:bg-red-700"
             >
               Yes, Delete Everything
             </button>
             <button 
+              type="button"
               onClick={() => setShowConfirmClear(false)}
               className="flex-1 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-bold hover:bg-red-50"
             >
@@ -1828,6 +1861,7 @@ function BulkActionsForm({ disciplines, onClear, onImport, onExport }: {
           </div>
         ) : (
           <button 
+            type="button"
             onClick={() => setShowConfirmClear(true)}
             title="Clear all questions and move them to the recovery bin"
             aria-label="Clear All Questions"
@@ -1843,6 +1877,7 @@ function BulkActionsForm({ disciplines, onClear, onImport, onExport }: {
         <div className="flex justify-between items-center">
           <h4 className="text-xs font-bold text-gray-400 uppercase">Bulk Actions</h4>
           <button 
+            type="button"
             onClick={onExport}
             title="Export all current questions to a text file"
             aria-label="Export Questions"
@@ -1853,10 +1888,12 @@ function BulkActionsForm({ disciplines, onClear, onImport, onExport }: {
         </div>
         <div>
           <p className="text-xs text-gray-500 mb-3">
-            Paste questions below (one per line). <br/>
+            Paste one question per line, or paste a previously exported question text file directly. <br/>
             Format: <code className="bg-gray-100 px-1 rounded">Question Text</code> <br/>
             Or: <code className="bg-gray-100 px-1 rounded">Discipline | Question Text</code> <br/>
             Or: <code className="bg-gray-100 px-1 rounded">Discipline | Principle | Question Text</code>
+            <br/>
+            Quoted legacy fields and empty-line paragraphs are also supported.
           </p>
           
           <label className="block text-xs font-bold text-gray-400 uppercase mb-1">Default Discipline</label>
@@ -1871,11 +1908,12 @@ function BulkActionsForm({ disciplines, onClear, onImport, onExport }: {
           <textarea 
             value={importText}
             onChange={(e) => setImportText(e.target.value)}
-            placeholder="Agility | Daily Standups | How effectively does the team implement daily standups?&#10;Architecture | System is modular | Is the system designed with modularity in mind?"
+            placeholder={`Agility | Customer Satisfaction | Our highest priority is to satisfy the customer through early and continuous delivery of valuable software,,The needs of our customer is at the center of our work.\n"Overall Process" | "Transparent Planning" | "The plan should be ""experiencable"" on all levels of the project."\nArchitecture | System is modular | Is the system designed with modularity in mind?`}
             className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 h-40 resize-none text-sm font-mono"
           />
         </div>
         <button 
+          type="button"
           onClick={() => { if(importText) onImport(importText, defaultDiscId); }}
           title="Import all questions from the text area above"
           aria-label="Import Questions"

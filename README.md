@@ -483,6 +483,8 @@ Important limitation:
   - `Question Text`
   - `Discipline | Question Text`
   - `Discipline | Principle | Question Text`
+  - `"Discipline" | "Principle" | "Question Text"`
+  - structured records with quoted or unquoted empty-line paragraphs
 
 ### Option 1: Import Questions Directly From the Text File
 
@@ -501,9 +503,11 @@ Use this option if you want the fastest path. The text file is already close to 
 
 Notes for the text file:
 
-- The importer splits each line on the pipe character `|`.
+- The importer recognizes structured records that start with a pipe-delimited header line.
 - The first text file already follows the `Discipline | Principle | Question Text` pattern closely enough for bulk import.
-- Commas and quotation marks inside the question text are fine.
+- Any following lines without a new pipe-delimited header are merged into the same question record, including empty-line paragraph breaks.
+- Legacy quoted field wrappers are stripped during import, while inner emphasis quotes such as `"delta"` are preserved.
+- Newly exported question text files use single-line records and `,,` as the paragraph separator for round-trip paste import.
 - If a pasted discipline name does not match an existing app discipline exactly, the app falls back to the `Default Discipline` you selected.
 
 ### Option 2: Use the Excel Workbook as a Question Source
