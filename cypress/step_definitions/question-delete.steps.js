@@ -3,6 +3,6 @@ const { SEL } = require("../support/selectors");
 
 // Delete question steps — the main delete When is in shared.steps.js
 
-Then("the recovery modal should contain at least one deleted question card", () => {
-  cy.get(SEL.modal).find(".list-card").should("have.length.greaterThan", 0);
-});
+// Duplicate step removed: authoritative implementation lives in recovery-bin.steps.js
+// Keeping this file for delete-related steps; the recovery-modal assertion
+// is implemented in cypress/step_definitions/recovery-bin.steps.js

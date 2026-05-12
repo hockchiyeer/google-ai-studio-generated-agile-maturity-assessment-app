@@ -59,7 +59,9 @@ Then("the snapshot list should not have a delete button", () => {
 });
 
 Then("a confirm delete row should appear", () => {
-  cy.get('[data-action="confirm-delete-snapshot"]').should("be.visible");
+  cy.get('[data-action="confirm-delete-snapshot"]')
+    .scrollIntoView()
+    .should("be.visible");
 });
 
 Then("the snapshot form should have a label input", () => {

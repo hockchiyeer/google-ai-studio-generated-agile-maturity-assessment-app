@@ -11,6 +11,7 @@ When("the user fills in the question text with {string}", (questionText) => {
 
 When("the user submits the add-question form", () => {
   cy.get(SEL.addQuestionSubmit).click();
+  // Submission triggers modal close; test should wait for app-driven UI changes where necessary
 });
 
 Then("the add-question form should have a discipline select", () => {

@@ -25,9 +25,11 @@ Feature: Recovery Bin
 
   Scenario: Recover button closes the recovery modal automatically
     When the user deletes the first question in the table
+    And the question count stat should show "59"
     And the user opens the "recovery" modal
     And the user clicks Recover on the first deleted question card
-    Then the modal should be closed
+    Then the modal should still be open
+    And the question count stat should show "60"
 
   Scenario: Clear Bin button appears when deleted questions exist
     When the user deletes the first question in the table

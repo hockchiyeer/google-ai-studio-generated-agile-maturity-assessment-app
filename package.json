@@ -7,9 +7,9 @@
     "serve": "serve . --listen 5500 --no-clipboard",
     "cy:open": "cypress open",
     "cy:run": "cypress run --browser chrome --headed",
-    "test:e2e": "start-server-and-test serve http://localhost:5500 cy:run",
+    "test:e2e": "node ./cypress/reports/tools/run-e2e-and-report.js",
     "test:e2e:open": "start-server-and-test serve http://localhost:5500 cy:open",
-    "report:html": "node ./scripts/generate-cucumber-html.js"
+    "report:html": "node ./cypress/reports/tools/generate-cucumber-html.js"
   },
   "devDependencies": {
     "@badeball/cypress-cucumber-preprocessor": "^21.0.0",

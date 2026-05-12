@@ -79,10 +79,17 @@ Troubleshooting
 	- Update packages in a branch to newer versions where `ps-tree` is replaced/updated (advanced).
 
 Reporting and CI
-- The `test:e2e` script uses `start-server-and-test` to start the static server and run the Cypress CLI; it will return a non-zero exit code if tests fail.
-- Test screenshots are saved to `cypress/screenshots` when a test fails.
 
-If you need help stabilizing specific failing specs, open an issue with the failing spec name and an attached screenshot from `cypress/screenshots`.
+- The `test:e2e` script uses `start-server-and-test` to start a static server and run the Cypress CLI; it returns a non-zero exit code when tests fail (useful for CI pipelines).
+- This project includes a small in-repo reporter and transformer that produce a consolidated Cucumber HTML report. Workflow:
+	1. Run the E2E suite: `npm run test:e2e` — this writes per-spec wrapper JSON and screenshots into `cypress/reports/cucumber/`.
+	2. Transform and generate the final HTML: `npm run report:html` — this converts wrapper JSON -> Cucumber JSON and runs `multiple-cucumber-html-reporter`.
+	3. The final consolidated HTML report is written to `cypress/reports/cucumber/html/index.html`.
+
+- Transient per-spec JSON and transformed JSON are ignored in `.gitignore` (they are intermediate artifacts). The final HTML directory `cypress/reports/cucumber/html/` is intentionally left available for review or optional commit.
+- When a test fails, screenshots are saved under `cypress/reports/cucumber/screenshots/` and referenced in the generated HTML report.
+
+If you need help stabilizing failing specs, open an issue with the failing spec name and attach the screenshot(s) from `cypress/reports/cucumber/screenshots/` or the specific failure from the generated HTML report.
 
 ## Persistence Model
 

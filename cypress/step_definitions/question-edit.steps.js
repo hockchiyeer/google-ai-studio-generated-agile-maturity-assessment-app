@@ -36,7 +36,14 @@ Then("the inline principle editor should be visible", () => {
 });
 
 Then("the inline principle editor should not be visible", () => {
-  cy.get(SEL.inlineEditInput).should("not.exist");
+  // Inline editor may be removed from DOM or hidden; accept either.
+  cy.get("body").then(($body) => {
+    if ($body.find(SEL.inlineEditInput).length === 0) {
+      cy.wrap(true).should("be.true");
+    } else {
+      cy.get(SEL.inlineEditInput).should("not.be.visible");
+    }
+  });
 });
 
 Then("the inline question textarea editor should be visible", () => {

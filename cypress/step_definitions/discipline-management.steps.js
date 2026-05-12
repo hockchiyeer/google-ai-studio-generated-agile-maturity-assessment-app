@@ -7,6 +7,7 @@ When("the user types {string} into the add discipline input", (name) => {
 
 When("the user submits the add discipline form", () => {
   cy.get(SEL.addDisciplineSubmit).click();
+  // Submission triggers modal close; test should wait for app-driven UI changes where necessary
 });
 
 When("the user submits the add discipline form without a name", () => {

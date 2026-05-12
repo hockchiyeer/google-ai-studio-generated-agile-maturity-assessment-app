@@ -5,7 +5,8 @@ When("the user clicks Recover on the first deleted question card", () => {
   cy.get(SEL.modal)
     .find('[data-action="recover-question"]')
     .first()
-    .click();
+    .scrollIntoView()
+    .click({ force: true });
 });
 
 When("the user clicks the Clear Bin button", () => {

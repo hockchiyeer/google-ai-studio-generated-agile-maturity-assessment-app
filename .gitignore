@@ -37,7 +37,12 @@ Thumbs.db
 # Keep final HTML report but ignore generated JSON and screenshots under reports
 cypress/screenshots/
 cypress/videos/
+
+# per-spec wrapper JSON created by our in-repo reporter (transient)
+cypress/reports/cucumber/*.json
+# transformed cucumber json inputs for the external reporter
 cypress/reports/cucumber/json/
+cypress/reports/cucumber/json-for-reporter/
 cypress/reports/cucumber/screenshots/
 
 # Allow committed HTML reports
