@@ -2,5 +2,20 @@
   "name": "agile-maturity-assessment-static",
   "private": true,
   "version": "1.0.0",
-  "description": "Static Agile Maturity Assessment dashboard that runs directly from index.html."
+  "description": "Static Agile Maturity Assessment dashboard that runs directly from index.html.",
+  "scripts": {
+    "serve": "serve . --listen 5500 --no-clipboard",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run --browser chrome --headed",
+    "test:e2e": "start-server-and-test serve http://localhost:5500 cy:run",
+    "test:e2e:open": "start-server-and-test serve http://localhost:5500 cy:open"
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^21.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.2",
+    "cypress": "^13.0.0",
+    "esbuild": "^0.25.0",
+    "serve": "^14.2.4",
+    "start-server-and-test": "^2.0.10"
+  }
 }
