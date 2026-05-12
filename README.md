@@ -28,6 +28,62 @@ Open [index.html](./index.html) in a browser.
 
 That is the full runtime flow.
 
+## Development and Automated Tests
+
+This repository includes a full Cucumber-style BDD test suite powered by Cypress (v13+) that exercises the app end-to-end against a local static server. The tests are designed to be atomic: every feature seeds the browser `localStorage` with fixture data and tears down state between scenarios so the real app data is not modified.
+
+Prerequisites
+- Node.js 18+ (or a compatible LTS)
+- npm (comes with Node.js)
+
+Install dev dependencies:
+
+```powershell
+npm install
+```
+
+Start the static server and run the full E2E suite (recommended):
+
+```powershell
+npm run test:e2e
+```
+
+If you prefer to run the server and Cypress separately (useful when debugging):
+
+```powershell
+npm run serve    ; # starts a static server on http://localhost:5500
+npm run cy:open  ; # opens Cypress GUI
+```
+
+Or run the headless runner against an already-running server:
+
+```powershell
+npm run cy:run
+```
+
+Test design notes
+- Tests live under `cypress/e2e/features` (Gherkin `.feature` files).
+- Step definitions are in `cypress/step_definitions` and support utilities in `cypress/support`.
+- Fixtures used to seed the app are under `cypress/fixtures/` (for example `seed-data-minimal.json`).
+- The test harness injects the fixture via `cy.seedAndVisit()` which writes the fixture to the app's storage key before the page scripts run. This makes tests deterministic and atomic.
+- A small helper `cy.waitForAppIdle()` was added to `cypress/support/commands.js` to reduce timing-related flakiness by waiting for transient notices to clear and the app shell to be visible.
+
+Troubleshooting
+- If Cypress reports it cannot verify the server is running, ensure the static server is listening on http://localhost:5500 (the `serve` script uses `serve . --listen 5500`).
+- Windows-specific process enumeration errors (OperationalError from `ps-tree`) have been observed at test teardown when tooling attempts to enumerate child processes. If you encounter an error like:
+
+	OperationalError: Unknown process listing header:
+
+	This originates from `ps-tree` (used by some npm helpers) trying to parse process listings on certain Windows environments. Workarounds:
+	- Run the server manually (see commands above) and then run `npm run cy:run` so start/stop tooling isn't required.
+	- Update packages in a branch to newer versions where `ps-tree` is replaced/updated (advanced).
+
+Reporting and CI
+- The `test:e2e` script uses `start-server-and-test` to start the static server and run the Cypress CLI; it will return a non-zero exit code if tests fail.
+- Test screenshots are saved to `cypress/screenshots` when a test fails.
+
+If you need help stabilizing specific failing specs, open an issue with the failing spec name and an attached screenshot from `cypress/screenshots`.
+
 ## Persistence Model
 
 - The main working dataset is saved to `localStorage`.
