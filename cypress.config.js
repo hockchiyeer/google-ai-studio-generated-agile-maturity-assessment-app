@@ -8,7 +8,7 @@ module.exports = defineConfig({
     baseUrl: "http://localhost:5500",
     specPattern: "cypress/e2e/features/**/*.feature",
     supportFile: "cypress/support/e2e.js",
-    screenshotsFolder: "cypress/screenshots",
+  screenshotsFolder: "cypress/reports/cucumber/screenshots",
     videosFolder: "cypress/videos",
     video: false,
     defaultCommandTimeout: 8000,
@@ -21,6 +21,9 @@ module.exports = defineConfig({
           plugins: [createEsbuildPlugin(config)],
         })
       );
+      // Delegate JSON report writing to a small plugin module for single responsibility
+      const attachCucumberReporter = require("./cypress/plugins/cucumber-reporter");
+      attachCucumberReporter(on, config);
       return config;
     },
   },

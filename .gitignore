@@ -34,5 +34,11 @@ Thumbs.db
 *.swo
  
 # Cypress artifacts
+# Keep final HTML report but ignore generated JSON and screenshots under reports
 cypress/screenshots/
 cypress/videos/
+cypress/reports/cucumber/json/
+cypress/reports/cucumber/screenshots/
+
+# Allow committed HTML reports
+!cypress/reports/cucumber/html/
