@@ -197,6 +197,28 @@
     };
   }
 
+  function mergeDisciplinesForStartup(templateDisciplines, savedDisciplines) {
+    var seen = Object.create(null);
+    var merged = [];
+
+    templateDisciplines.forEach(function (templateDiscipline) {
+      seen[templateDiscipline.id] = true;
+      var saved = savedDisciplines.find(function (d) {
+        return d.id === templateDiscipline.id;
+      });
+      merged.push(cloneData(saved || templateDiscipline));
+    });
+
+    savedDisciplines.forEach(function (discipline) {
+      if (!seen[discipline.id]) {
+        seen[discipline.id] = true;
+        merged.push(cloneData(discipline));
+      }
+    });
+
+    return merged;
+  }
+
   function createStartupAssessmentData(raw) {
     var fallback = app.constants.createInitialData();
     if (!isObject(raw)) {
@@ -249,9 +271,38 @@
       };
     });
 
+    var templateQuestionIds = Object.create(null);
+    fallback.questions.forEach(function (question) {
+      templateQuestionIds[question.id] = true;
+    });
+
+    normalized.questions.forEach(function (extraQuestion) {
+      if (templateQuestionIds[extraQuestion.id]) {
+        return;
+      }
+
+      var extraScores = {};
+      snapshots.forEach(function (snapshot) {
+        if (extraQuestion.scores && extraQuestion.scores[snapshot.id] !== undefined) {
+          extraScores[snapshot.id] = clampNumber(extraQuestion.scores[snapshot.id], 0, 5, 0);
+        } else {
+          extraScores[snapshot.id] = 2;
+        }
+      });
+
+      questions.push({
+        id: extraQuestion.id,
+        disciplineId: extraQuestion.disciplineId,
+        principle: extraQuestion.principle,
+        question: extraQuestion.question,
+        scores: extraScores,
+        targetScore: extraQuestion.targetScore,
+      });
+    });
+
     return {
       schemaVersion: normalized.schemaVersion || fallback.schemaVersion,
-      disciplines: cloneData(fallback.disciplines),
+      disciplines: mergeDisciplinesForStartup(fallback.disciplines, normalized.disciplines),
       questions: questions,
       deletedQuestions: [],
       snapshots: snapshots,

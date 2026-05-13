@@ -697,6 +697,13 @@
             return question;
           });
         });
+        try {
+          if (typeof persistenceService.saveData === "function") {
+            persistenceService.saveData(store.getState().data);
+          }
+        } catch (e) {
+          // ignore and rely on scheduled persistence
+        }
       } else if (action === "delete-question") {
         var questionId = actionTarget.getAttribute("data-id");
         var questionToDelete = state.data.questions.find(function (question) {
@@ -984,6 +991,15 @@
           }
         );
         closeModal();
+        // Persist immediately so add-question survives rapid follow-up actions
+        // (for example an immediate reload during automated tests).
+        try {
+          if (typeof persistenceService.saveData === "function") {
+            persistenceService.saveData(store.getState().data);
+          }
+        } catch (e) {
+          // ignore and rely on scheduled persistence
+        }
       } else if (action === "add-discipline") {
         var name = String(formData.get("name") || "").trim();
         if (!name) {
@@ -1003,6 +1019,15 @@
           }
         );
         form.reset();
+        // Persist immediately so add-discipline survives rapid follow-up actions
+        // (for example an immediate reload during automated tests).
+        try {
+          if (typeof persistenceService.saveData === "function") {
+            persistenceService.saveData(store.getState().data);
+          }
+        } catch (e) {
+          // ignore and rely on scheduled persistence
+        }
       } else if (action === "rename-discipline") {
         var renameId = form.getAttribute("data-id");
         var newName = String(formData.get("name") || "").trim();
@@ -1145,6 +1170,41 @@
       var initialSave = persistenceService.saveData(store.getState().data);
       if (!initialSave.ok) {
         setNotice("warning", "The browser could not initialize local storage persistence.", "Storage");
+      }
+      // Expose a tiny, test-only flush helper so E2E tests can force an
+      // immediate persistence flush when necessary to avoid race conditions
+      // with the application's debounce-based autosave. Only expose when
+      // running under Cypress to avoid leaking test helpers to production.
+      try {
+        if (global && global.Cypress) {
+          global.__testFlushPersistence = function () {
+            try {
+              var currentState = store.getState();
+              // Update lastSerializedData so schedulePersistence logic stays in sync
+              lastSerializedData = JSON.stringify(currentState.data);
+              return persistenceService.saveData(currentState.data);
+            } catch (e) {
+              return { ok: false, error: e };
+            }
+          };
+        }
+      } catch (e) {
+        // defensive: do not throw if global isn't writable in some environments
+      }
+
+      // Expose an accessor to the current in-memory state for diagnostics
+      try {
+        if (global && global.Cypress) {
+          global.__testGetState = function () {
+            try {
+              return store.getState();
+            } catch (e) {
+              return null;
+            }
+          };
+        }
+      } catch (e) {
+        // ignore
       }
 
       store.subscribe(function () {
