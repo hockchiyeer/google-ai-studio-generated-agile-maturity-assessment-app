@@ -45,5 +45,7 @@ cypress/reports/cucumber/json/
 cypress/reports/cucumber/json-for-reporter/
 cypress/reports/cucumber/screenshots/
 
-# Allow committed HTML reports
-!cypress/reports/cucumber/html/
+## Reporting artifacts
+# Ignore generated HTML report and debug output directories (transient)
+cypress/reports/cucumber/html/
+cypress/reports/cucumber/debug/
