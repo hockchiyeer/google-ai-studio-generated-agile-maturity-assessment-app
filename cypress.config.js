@@ -6,7 +6,7 @@ const createBundler = require("@bahmutov/cypress-esbuild-preprocessor");
 module.exports = defineConfig({
   e2e: {
     baseUrl: "http://localhost:5500",
-    specPattern: "cypress/e2e/features/**/*.feature",
+    specPattern: ["cypress/e2e/features/**/*.feature"],
     supportFile: "cypress/support/e2e.js",
     screenshotsFolder: "cypress/reports/cucumber/screenshots",
     videosFolder: "cypress/videos",

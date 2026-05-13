@@ -83,6 +83,30 @@ When("the user clicks the score chip {string} on the first question row", (score
     .first()
     .find(`[data-action="set-score"][data-score="${score}"]`)
     .click();
+  
+  // Optional: when debugging failing persistence runs we can opt-in to
+  // capture the app's persisted localStorage to disk for this run. Set
+  // CYPRESS_CAPTURE_PERSISTED_JSON=true when running Cypress to enable.
+  if (typeof Cypress !== 'undefined' && Cypress.env && Cypress.env('capturePersistedJson')) {
+    cy.getStoredData().then((data) => {
+      // write a compact JSON snapshot for offline diffing
+      cy.writeFile('cypress/reports/cucumber/debug/stored-data-failing-run.json', JSON.stringify(data, null, 2));
+    });
+  }
+    // Wait (with retry) for the app's persistence to complete so subsequent
+    // steps (for example a reload) read the updated value. This is a retrying
+    // assertion (no fixed sleeps) and keeps tests reliable without global
+    // waits. Use an increased timeout to account for debounce and any IO.
+    cy.window({ timeout: 10000 }).should((win) => {
+      const raw = win.localStorage.getItem(APP_STORAGE_KEY);
+      expect(raw, 'app localStorage raw value after score click').to.be.a('string');
+      const data = JSON.parse(raw);
+      expect(data, 'parsed localStorage after score click').to.be.ok;
+      const question = data.questions && data.questions.find((q) => q && q.id);
+      expect(question, 'first question exists in stored data after click').to.be.ok;
+      const scores = Object.values(question.scores).map((s) => (typeof s === 'string' ? parseInt(s, 10) : s));
+      expect(scores).to.include(parseInt(score, 10));
+    });
 });
 
 When("the user selects {string} in the filter dropdown", (disciplineName) => {
@@ -248,15 +272,17 @@ Then("the app localStorage key should contain valid JSON", () => {
 });
 
 Then("the app localStorage data should reflect a score of {int} for question {string}", (score, questionId) => {
-  cy.window().then((win) => {
+  // Retry by reading directly from window.localStorage with an increased timeout
+  // so we wait for the app's persistence debounce/scheduling to complete.
+  cy.window({ timeout: 10000 }).should((win) => {
     const raw = win.localStorage.getItem(APP_STORAGE_KEY);
+    expect(raw, 'app localStorage raw value').to.be.a('string');
     const data = JSON.parse(raw);
-    const question = data.questions.find((q) => q.id === questionId);
-    if (question) {
-      // Scores may be stored as strings or numbers depending on app code.
-      const scores = Object.values(question.scores).map((s) => (typeof s === 'string' ? parseInt(s, 10) : s));
-      expect(scores).to.include(score);
-    }
+    expect(data, 'parsed localStorage data').to.be.ok;
+    const question = data.questions && data.questions.find((q) => q.id === questionId);
+    expect(question, 'question exists in stored data').to.be.ok;
+    const scores = Object.values(question.scores).map((s) => (typeof s === 'string' ? parseInt(s, 10) : s));
+    expect(scores).to.include(score);
   });
 });
 

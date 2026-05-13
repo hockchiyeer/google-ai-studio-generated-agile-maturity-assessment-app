@@ -11,11 +11,12 @@ Feature: Persistence via localStorage
 
   Scenario: Changing a score is persisted in localStorage
     When the user clicks the score chip "5" on the first question row
-    Then the app localStorage data should reflect a score of 5 for question "q-A01"
+    Then the test waits for persistence to include score 5 for question "q-A01"
 
   Scenario: A score change survives a page reload
     When the user clicks the score chip "5" on the first question row
     And the user reloads the page
+    Then the test waits for persistence to include score 5 for question "q-A01"
     Then the first question row should have score chip "5" active
 
   Scenario: An added question survives a page reload
@@ -24,6 +25,7 @@ Feature: Persistence via localStorage
     And the user fills in the question text with "Does this question survive a reload?"
     And the user submits the add-question form
     And the user reloads the page
+    Then the test waits for persistence to include a question principle "Persistent Principle"
     Then the question table should contain "Persistent Principle"
 
   Scenario: A new discipline survives a page reload
@@ -32,6 +34,7 @@ Feature: Persistence via localStorage
     And the user submits the add discipline form
     And the user closes the modal
     And the user reloads the page
+    Then the test waits for persistence to include discipline "Persistent Discipline"
     Then the filter dropdown should contain "Persistent Discipline"
 
   Scenario: App with no localStorage initialises cleanly on reload

@@ -20,6 +20,8 @@
 
     function saveData(data) {
       try {
+        // Persist the serialized data to localStorage. Keep this function
+        // minimal and avoid noisy console output during normal test runs.
         global.localStorage.setItem(storageKey, JSON.stringify(data));
         return { ok: true };
       } catch (error) {
