@@ -24,6 +24,7 @@ Feature: Persistence via localStorage
     And the user fills in the principle with "Persistent Principle"
     And the user fills in the question text with "Does this question survive a reload?"
     And the user submits the add-question form
+    Then the test waits for persistence to include a question principle "Persistent Principle"
     And the user reloads the page
     Then the test waits for persistence to include a question principle "Persistent Principle"
     Then the question table should contain "Persistent Principle"
@@ -33,6 +34,7 @@ Feature: Persistence via localStorage
     And the user types "Persistent Discipline" into the add discipline input
     And the user submits the add discipline form
     And the user closes the modal
+    Then the test waits for persistence to include discipline "Persistent Discipline"
     And the user reloads the page
     Then the test waits for persistence to include discipline "Persistent Discipline"
     Then the filter dropdown should contain "Persistent Discipline"
