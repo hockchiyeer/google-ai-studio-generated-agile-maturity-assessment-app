@@ -49,3 +49,5 @@ cypress/reports/cucumber/screenshots/
 # Ignore generated HTML report and debug output directories (transient)
 cypress/reports/cucumber/html/
 cypress/reports/cucumber/debug/
+# Cypress downloads (test-run artifacts)
+cypress/downloads/
